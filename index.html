@@ -1,0 +1,315 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px auto;
+      background: linear-gradient(135deg, #f6d365, #fda085);
+      color: #333;
+      padding: 20px;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .date-input-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    input[type="number"] {
+      width: 80px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] { -moz-appearance: textfield; }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #28a745;
+    }
+    .menu {
+      text-align: left;
+      margin: 10px 0;
+    }
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Age Calculator</h1>
+  <p id="prompt">Enter your birthdate:</p>
+  
+  <div class="date-input-container">
+    <input type="number" id="day" placeholder="Day">
+    <input type="number" id="month" placeholder="Month">
+    <input type="number" id="year" placeholder="Year">
+  </div>
+  
+  <div class="menu">
+    <select id="languageSelector" onchange="changeLanguage()">
+      <option value="en">English</option>
+      <option value="bn">বাংলা</option>
+      <option value="hi">हिंदी</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="pt">Português</option>
+      <option value="ru">Русский</option>
+      <option value="ja">日本語</option>
+      <option value="zh">中文</option>
+      <option value="ar">العربية</option>
+      <option value="ko">한국어</option>
+      <option value="it">Italiano</option>
+      <option value="tr">Türkçe</option>
+      <option value="nl">Nederlands</option>
+      <option value="pl">Polski</option>
+      <option value="sv">Svenska</option>
+      <option value="vi">Tiếng Việt</option>
+      <option value="th">ไทย</option>
+      <option value="id">Bahasa Indonesia</option>
+      <option value="el">Ελληνικά</option>
+      <option value="he">עברית</option>
+      <option value="ro">Română</option>
+      <option value="hu">Magyar</option>
+    </select>
+  </div>
+  <button onclick="calculateAge()">Calculate Age</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const translations = {
+      en: {
+        title: "Age Calculator", prompt: "Enter your Day, Month, and Year of birth:", calculateButton: "Calculate Age", dayPlaceholder: "Day", monthPlaceholder: "Month", yearPlaceholder: "Year",
+        result: (y, m, d, nm, nd, by, bm) => `Your current age is <strong>${y} years</strong>, <strong>${m} months</strong>, and <strong>${d} days</strong>. You were born in <strong>${by}</strong>, in the month of <strong>${bm}</strong>. Your next birthday is <strong>${nm} months</strong> and <strong>${nd} days</strong> away.`
+      },
+      bn: {
+        title: "বয়স ক্যালকুলেটর", prompt: "আপনার জন্ম দিন, মাস এবং সাল লিখুন:", calculateButton: "বয়স গণনা করুন", dayPlaceholder: "দিন", monthPlaceholder: "মাস", yearPlaceholder: "সাল",
+        result: (y, m, d, nm, nd, by, bm) => `আপনার বর্তমান বয়স <strong>${y} বছর</strong>, <strong>${m} মাস</strong>, এবং <strong>${d} দিন</strong>। আপনি <strong>${by}</strong> সালের <strong>${bm}</strong> মাসে জন্মগ্রহণ করেছিলেন। আপনার পরবর্তী জন্মদিন আর মাত্র <strong>${nm} মাস</strong> এবং <strong>${nd} দিন</strong> পরে।`
+      },
+      hi: {
+        title: "उम्र कैलकुलेटर", prompt: "अपना जन्म दिन, महीना और साल दर्ज करें:", calculateButton: "उम्र की गणना करें", dayPlaceholder: "दिन", monthPlaceholder: "महीना", yearPlaceholder: "साल",
+        result: (y, m, d, nm, nd, by, bm) => `आपकी वर्तमान उम्र <strong>${y} साल</strong>, <strong>${m} महीने</strong>, और <strong>${d} दिन</strong> है। आप <strong>${by}</strong> के <strong>${bm}</strong> महीने में पैदा हुए थे। आपका अगला जन्मदिन <strong>${nm} महीने</strong> और <strong>${nd} दिन</strong> बाद है।`
+      },
+      es: {
+        title: "Calculadora de Edad", prompt: "Ingrese su día, mes y año de nacimiento:", calculateButton: "Calcular Edad", dayPlaceholder: "Día", monthPlaceholder: "Mes", yearPlaceholder: "Año",
+        result: (y, m, d, nm, nd, by, bm) => `Tu edad actual es <strong>${y} años</strong>, <strong>${m} meses</strong>, y <strong>${d} días</strong>. Naciste en <strong>${by}</strong>, en el mes de <strong>${bm}</strong>. Tu próximo cumpleaños es en <strong>${nm} meses</strong> y <strong>${nd} días</strong>.`
+      },
+      fr: {
+        title: "Calculateur d'âge", prompt: "Entrez votre jour, mois et année de naissance :", calculateButton: "Calculer l'âge", dayPlaceholder: "Jour", monthPlaceholder: "Mois", yearPlaceholder: "Année",
+        result: (y, m, d, nm, nd, by, bm) => `Votre âge actuel est de <strong>${y} ans</strong>, <strong>${m} mois</strong>, et <strong>${d} jours</strong>. Vous êtes né(e) en <strong>${by}</strong>, au mois de <strong>${bm}</strong>. Votre prochain anniversaire est dans <strong>${nm} mois</strong> et <strong>${nd} jours</strong>.`
+      },
+      de: {
+        title: "Altersrechner", prompt: "Geben Sie Ihren Geburts-Tag, -Monat und -Jahr ein:", calculateButton: "Alter berechnen", dayPlaceholder: "Tag", monthPlaceholder: "Monat", yearPlaceholder: "Jahr",
+        result: (y, m, d, nm, nd, by, bm) => `Ihr aktuelles Alter ist <strong>${y} Jahre</strong>, <strong>${m} Monate</strong> und <strong>${d} Tage</strong>. Sie wurden im Jahr <strong>${by}</strong> im Monat <strong>${bm}</strong> geboren. Ihr nächster Geburtstag ist in <strong>${nm} Monaten</strong> und <strong>${nd} Tagen</strong>.`
+      },
+      pt: {
+        title: "Calculadora de Idade", prompt: "Digite seu dia, mês e ano de nascimento:", calculateButton: "Calcular Idade", dayPlaceholder: "Dia", monthPlaceholder: "Mês", yearPlaceholder: "Ano",
+        result: (y, m, d, nm, nd, by, bm) => `Sua idade atual é <strong>${y} anos</strong>, <strong>${m} meses</strong> e <strong>${d} dias</strong>. Você nasceu em <strong>${by}</strong>, no mês de <strong>${bm}</strong>. Seu próximo aniversário é em <strong>${nm} meses</strong> e <strong>${nd} dias</strong>.`
+      },
+      ru: {
+        title: "Калькулятор возраста", prompt: "Введите день, месяц и год вашего рождения:", calculateButton: "Рассчитать возраст", dayPlaceholder: "День", monthPlaceholder: "Месяц", yearPlaceholder: "Год",
+        result: (y, m, d, nm, nd, by, bm) => `Ваш текущий возраст: <strong>${y} лет</strong>, <strong>${m} месяцев</strong> и <strong>${d} дней</strong>. Вы родились в <strong>${by}</strong> году, в месяце <strong>${bm}</strong>. Ваш следующий день рождения через <strong>${nm} месяцев</strong> и <strong>${nd} дней</strong>.`
+      },
+      ja: {
+        title: "年齢計算機", prompt: "生年月日（日、月、年）を入力してください：", calculateButton: "年齢を計算する", dayPlaceholder: "日", monthPlaceholder: "月", yearPlaceholder: "年",
+        result: (y, m, d, nm, nd, by, bm) => `現在の年齢は<strong>${y}歳</strong>、<strong>${m}ヶ月</strong>、<strong>${d}日</strong>です。あなたは<strong>${by}</strong>年の<strong>${bm}</strong>に生まれました。次の誕生日は<strong>${nm}ヶ月</strong>と<strong>${nd}日</strong>後です。`
+      },
+      zh: {
+        title: "年龄计算器", prompt: "输入您的出生日、月、年：", calculateButton: "计算年龄", dayPlaceholder: "日", monthPlaceholder: "月", yearPlaceholder: "年",
+        result: (y, m, d, nm, nd, by, bm) => `您目前的年龄是<strong>${y}岁</strong>, <strong>${m}个月</strong>, 和 <strong>${d}天</strong>。您出生于<strong>${by}</strong>年<strong>${bm}</strong>。您的下一个生日还有<strong>${nm}个月</strong>和<strong>${nd}天</strong>。`
+      },
+      ar: {
+        title: "حاسبة العمر", prompt: "أدخل يوم وشهر وسنة ميلادك:", calculateButton: "احسب العمر", dayPlaceholder: "يوم", monthPlaceholder: "شهر", yearPlaceholder: "سنة",
+        result: (y, m, d, nm, nd, by, bm) => `عمرك الحالي هو <strong>${y} سنوات</strong>, <strong>${m} أشهر</strong>, و <strong>${d} أيام</strong>. لقد ولدت في عام <strong>${by}</strong>, في شهر <strong>${bm}</strong>. عيد ميلادك القادم بعد <strong>${nm} أشهر</strong> و <strong>${nd} أيام</strong>.`
+      },
+      ko: {
+        title: "나이 계산기", prompt: "생년월일(일, 월, 년)을 입력하세요:", calculateButton: "나이 계산", dayPlaceholder: "일", monthPlaceholder: "월", yearPlaceholder: "년",
+        result: (y, m, d, nm, nd, by, bm) => `현재 나이는 <strong>${y}세</strong>, <strong>${m}개월</strong>, <strong>${d}일</strong>입니다. 당신은 <strong>${by}</strong>년 <strong>${bm}</strong>에 태어났습니다. 다음 생일까지 <strong>${nm}개월</strong> <strong>${nd}일</strong> 남았습니다.`
+      },
+      it: {
+        title: "Calcolatore di Età", prompt: "Inserisci giorno, mese e anno di nascita:", calculateButton: "Calcola Età", dayPlaceholder: "Giorno", monthPlaceholder: "Mese", yearPlaceholder: "Anno",
+        result: (y, m, d, nm, nd, by, bm) => `La tua età attuale è <strong>${y} anni</strong>, <strong>${m} mesi</strong> e <strong>${d} giorni</strong>. Sei nato/a nel <strong>${by}</strong>, nel mese di <strong>${bm}</strong>. Il tuo prossimo compleanno è tra <strong>${nm} mesi</strong> e <strong>${nd} giorni</strong>.`
+      },
+      tr: {
+        title: "Yaş Hesaplayıcı", prompt: "Doğum gününüzü, ayınızı ve yılınızı girin:", calculateButton: "Yaşı Hesapla", dayPlaceholder: "Gün", monthPlaceholder: "Ay", yearPlaceholder: "Yıl",
+        result: (y, m, d, nm, nd, by, bm) => `Şu anki yaşınız <strong>${y} yıl</strong>, <strong>${m} ay</strong> ve <strong>${d} gün</strong>. <strong>${by}</strong> yılında, <strong>${bm}</strong> ayında doğdunuz. Bir sonraki doğum gününüze <strong>${nm} ay</strong> ve <strong>${nd} gün</strong> var.`
+      },
+      nl: {
+        title: "Leeftijdscalculator", prompt: "Voer uw geboortedag, -maand en -jaar in:", calculateButton: "Bereken Leeftijd", dayPlaceholder: "Dag", monthPlaceholder: "Maand", yearPlaceholder: "Jaar",
+        result: (y, m, d, nm, nd, by, bm) => `Uw huidige leeftijd is <strong>${y} jaar</strong>, <strong>${m} maanden</strong> en <strong>${d} dagen</strong>. U bent geboren in <strong>${by}</strong>, in de maand <strong>${bm}</strong>. Uw volgende verjaardag is over <strong>${nm} maanden</strong> en <strong>${nd} dagen</strong>.`
+      },
+      pl: {
+        title: "Kalkulator Wieku", prompt: "Wprowadź dzień, miesiąc i rok urodzenia:", calculateButton: "Oblicz Wiek", dayPlaceholder: "Dzień", monthPlaceholder: "Miesiąc", yearPlaceholder: "Rok",
+        result: (y, m, d, nm, nd, by, bm) => `Twój obecny wiek to <strong>${y} lat</strong>, <strong>${m} miesięcy</strong> i <strong>${d} dni</strong>. Urodziłeś/aś się w roku <strong>${by}</strong>, w miesiącu <strong>${bm}</strong>. Twoje następne urodziny za <strong>${nm} miesięcy</strong> i <strong>${nd} dni</strong>.`
+      },
+      sv: {
+        title: "Ålderskalkylator", prompt: "Ange din födelsedag, månad och år:", calculateButton: "Beräkna Ålder", dayPlaceholder: "Dag", monthPlaceholder: "Månad", yearPlaceholder: "År",
+        result: (y, m, d, nm, nd, by, bm) => `Din nuvarande ålder är <strong>${y} år</strong>, <strong>${m} månader</strong> och <strong>${d} dagar</strong>. Du föddes år <strong>${by}</strong>, i månaden <strong>${bm}</strong>. Din nästa födelsedag är om <strong>${nm} månader</strong> och <strong>${nd} dagar</strong>.`
+      },
+      vi: {
+        title: "Máy tính tuổi", prompt: "Nhập ngày, tháng và năm sinh của bạn:", calculateButton: "Tính tuổi", dayPlaceholder: "Ngày", monthPlaceholder: "Tháng", yearPlaceholder: "Năm",
+        result: (y, m, d, nm, nd, by, bm) => `Tuổi hiện tại của bạn là <strong>${y} tuổi</strong>, <strong>${m} tháng</strong> và <strong>${d} ngày</strong>. Bạn sinh vào năm <strong>${by}</strong>, tháng <strong>${bm}</strong>. Sinh nhật tiếp theo của bạn còn <strong>${nm} tháng</strong> và <strong>${nd} ngày</strong> nữa.`
+      },
+      th: {
+        title: "เครื่องคำนวณอายุ", prompt: "ป้อนวัน เดือน และปีเกิดของคุณ:", calculateButton: "คำนวณอายุ", dayPlaceholder: "วัน", monthPlaceholder: "เดือน", yearPlaceholder: "ปี",
+        result: (y, m, d, nm, nd, by, bm) => `อายุของคุณคือ <strong>${y} ปี</strong> <strong>${m} เดือน</strong> และ <strong>${d} วัน</strong> คุณเกิดในปี <strong>${by}</strong> เดือน <strong>${bm}</strong> วันเกิดครั้งต่อไปของคุณคือในอีก <strong>${nm} เดือน</strong> และ <strong>${nd} วัน</strong>`
+      },
+      id: {
+        title: "Kalkulator Usia", prompt: "Masukkan hari, bulan, dan tahun lahir Anda:", calculateButton: "Hitung Usia", dayPlaceholder: "Hari", monthPlaceholder: "Bulan", yearPlaceholder: "Tahun",
+        result: (y, m, d, nm, nd, by, bm) => `Usia Anda saat ini adalah <strong>${y} tahun</strong>, <strong>${m} bulan</strong>, dan <strong>${d} hari</strong>. Anda lahir pada tahun <strong>${by}</strong>, di bulan <strong>${bm}</strong>. Ulang tahun Anda berikutnya <strong>${nm} bulan</strong> dan <strong>${nd} hari</strong> lagi.`
+      },
+      el: {
+        title: "Υπολογιστής Ηλικίας", prompt: "Εισαγάγετε την ημέρα, μήνα και έτος γέννησής σας:", calculateButton: "Υπολογισμός Ηλικίας", dayPlaceholder: "Ημέρα", monthPlaceholder: "Μήνας", yearPlaceholder: "Έτος",
+        result: (y, m, d, nm, nd, by, bm) => `Η τρέχουσα ηλικία σας είναι <strong>${y} έτη</strong>, <strong>${m} μήνες</strong> και <strong>${d} ημέρες</strong>. Γεννηθήκατε το <strong>${by}</strong>, το μήνα <strong>${bm}</strong>. Τα επόμενα γενέθλιά σας είναι σε <strong>${nm} μήνες</strong> και <strong>${nd} ημέρες</strong>.`
+      },
+      he: {
+        title: "מחשבון גיל", prompt: "הזן את יום, חודש ושנת הלידה שלך:", calculateButton: "חשב גיל", dayPlaceholder: "יום", monthPlaceholder: "חודש", yearPlaceholder: "שנה",
+        result: (y, m, d, nm, nd, by, bm) => `גילך הנוכחי הוא <strong>${y} שנים</strong>, <strong>${m} חודשים</strong>, ו-<strong>${d} ימים</strong>. נולדת בשנת <strong>${by}</strong>, בחודש <strong>${bm}</strong>. יום ההולדת הבא שלך בעוד <strong>${nm} חודשים</strong> ו-<strong>${nd} ימים</strong>.`
+      },
+      ro: {
+        title: "Calculator de Vârstă", prompt: "Introduceți ziua, luna și anul nașterii:", calculateButton: "Calculează Vârsta", dayPlaceholder: "Zi", monthPlaceholder: "Lună", yearPlaceholder: "An",
+        result: (y, m, d, nm, nd, by, bm) => `Vârsta ta actuală este de <strong>${y} ani</strong>, <strong>${m} luni</strong> și <strong>${d} zile</strong>. Te-ai născut în anul <strong>${by}</strong>, în luna <strong>${bm}</strong>. Următoarea ta zi de naștere este peste <strong>${nm} luni</strong> și <strong>${nd} zile</strong>.`
+      },
+      hu: {
+        title: "Életkor Kalkulátor", prompt: "Adja meg a születési napját, hónapját és évét:", calculateButton: "Életkor kiszámítása", dayPlaceholder: "Nap", monthPlaceholder: "Hónap", yearPlaceholder: "Év",
+        result: (y, m, d, nm, nd, by, bm) => `A jelenlegi életkorod <strong>${y} év</strong>, <strong>${m} hónap</strong> és <strong>${d} nap</strong>. <strong>${by}</strong>-ban születtél, <strong>${bm}</strong> hónapban. A következő születésnapod <strong>${nm} hónap</strong> és <strong>${nd} nap</strong> múlva lesz.`
+      }
+    };
+
+    let currentLanguage = "en";
+
+    function changeLanguage() {
+      const languageSelector = document.getElementById("languageSelector");
+      currentLanguage = languageSelector.value;
+      const translation = translations[currentLanguage];
+      if (translation) {
+        document.getElementById("title").innerHTML = translation.title;
+        document.getElementById("prompt").innerHTML = translation.prompt;
+        document.querySelector("button").innerHTML = translation.calculateButton;
+        document.getElementById("day").placeholder = translation.dayPlaceholder;
+        document.getElementById("month").placeholder = translation.monthPlaceholder;
+        document.getElementById("year").placeholder = translation.yearPlaceholder;
+      }
+    }
+
+    function calculateAge() {
+      const day = parseInt(document.getElementById("day").value);
+      const month = parseInt(document.getElementById("month").value);
+      const year = parseInt(document.getElementById("year").value);
+
+      if (!day || !month || !year || month > 12 || day > 31) {
+        document.getElementById("result").innerHTML = "Please enter your birthdate correctly.";
+        return;
+      }
+
+      const birthDateObj = new Date(year, month - 1, day);
+      if (birthDateObj.getFullYear() !== year || birthDateObj.getMonth() !== month - 1 || birthDateObj.getDate() !== day) {
+        document.getElementById("result").innerHTML = "Invalid date. Please check the day and month.";
+        return;
+      }
+
+      const today = new Date();
+      if (birthDateObj > today) {
+        document.getElementById("result").innerHTML = "Birthdate cannot be in the future.";
+        return;
+      }
+
+      let years = today.getFullYear() - birthDateObj.getFullYear();
+      let months = today.getMonth() - birthDateObj.getMonth();
+      let days = today.getDate() - birthDateObj.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      const nextBirthday = new Date(today.getFullYear(), birthDateObj.getMonth(), birthDateObj.getDate());
+      if (today > nextBirthday) {
+        nextBirthday.setFullYear(today.getFullYear() + 1);
+      }
+      
+      const timeUntilNextBirthday = nextBirthday.getTime() - today.getTime();
+      let remainingDays = Math.ceil(timeUntilNextBirthday / (1000 * 3600 * 24));
+      
+      let nextMonths = 0;
+      let nextDays = 0;
+      
+      let tempDate = new Date(today);
+      while(remainingDays > 0) {
+          let daysInCurrentMonth = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 0).getDate();
+          if (remainingDays >= daysInCurrentMonth) {
+              nextMonths++;
+              remainingDays -= daysInCurrentMonth;
+              tempDate.setMonth(tempDate.getMonth() + 1);
+          } else {
+              nextDays = remainingDays;
+              remainingDays = 0;
+          }
+      }
+
+      const translation = translations[currentLanguage];
+      const resultText = translation.result(
+        years,
+        months,
+        days,
+        nextMonths,
+        nextDays,
+        birthDateObj.getFullYear(),
+        birthDateObj.toLocaleString(currentLanguage, { month: 'long' })
+      );
+      document.getElementById("result").innerHTML = resultText;
+    }
+    
+    changeLanguage();
+  </script>
+</body>
+</html>
